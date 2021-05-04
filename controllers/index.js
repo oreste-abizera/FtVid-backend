@@ -15,7 +15,9 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
     request.end(function (response) {
       if (response.error) throw new Error(response.error);
 
-      res.json({ success: true, matches: response.body });
+      const matches = response.body;
+      insertMatchesIntoDb(matches);
+      res.json({ success: true, size: matches.length, matches });
     });
   } catch (error) {
     return next(error);
@@ -26,7 +28,7 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
   try {
     let matches = await Match.find();
     if (matches) {
-      return res.json({ success: true, matches });
+      return res.json({ success: true, size: matches.length, matches });
     } else {
       return next(new ErrorResponse("no matches found", 404));
     }
@@ -35,4 +37,31 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
   }
 };
 
-async function insertMatchesIntoDb(newMatches) {}
+async function insertMatchesIntoDb(newMatches) {
+  const currentMatches = await Match.find();
+  let finalMatches = [];
+  if (currentMatches) {
+    let combined = [...newMatches, ...currentMatches];
+    for (let i = 0; i < combined.length; i++) {
+      let found = false;
+      for (let j = 0; j < finalMatches.length; j++) {
+        if (
+          finalMatches[j].title === combined[i].title &&
+          new Date(finalMatches[j].date).toISOString() ===
+            new Date(combined[i].date).toISOString() &&
+          finalMatches[j].url === combined[i].url
+        ) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        finalMatches.push(combined[i]);
+      }
+    }
+  } else {
+    finalMatches = [...newMatches];
+  }
+
+  await Match.create(finalMatches);
+}
