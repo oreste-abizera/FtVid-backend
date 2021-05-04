@@ -1,3 +1,9 @@
+//LOAD ENV VARS
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config/config.env" });
+require("./config/db");
+require("colors");
+
 const express = require("express");
 
 const app = express();

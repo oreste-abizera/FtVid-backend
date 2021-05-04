@@ -11,6 +11,9 @@
   "author": "oreste-abizera",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "colors": "^1.4.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.7",
+    "unirest": "^0.6.0"
   }
 }
