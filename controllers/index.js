@@ -34,3 +34,5 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
     return next(error);
   }
 };
+
+async function insertMatchesIntoDb(newMatches) {}

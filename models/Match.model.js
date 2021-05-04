@@ -56,4 +56,6 @@ const MatchSchema = new mongoose.Schema({
   ],
 });
 
+MatchSchema.index({ title: 1, date: 1, url: 1 }, { unique: 1 });
+
 module.exports.Match = new mongoose.model("Match", MatchSchema);
