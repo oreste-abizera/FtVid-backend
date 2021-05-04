@@ -9,6 +9,6 @@ Router.get("/", (req, res) => {
   });
 });
 
-Router.get("/videos", getVideosFromApi);
+Router.get("/videos/api", getVideosFromApi);
 
 module.exports = Router;
