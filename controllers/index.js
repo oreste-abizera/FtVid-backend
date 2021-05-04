@@ -2,6 +2,28 @@ var unirest = require("unirest");
 const { Match } = require("../models/Match.model");
 const ErrorResponse = require("../utils/ErrorResponse");
 
+module.exports.fetchMatchesFromApi = async () => {
+  try {
+    var request = unirest("GET", process.env.API_URL);
+
+    request.headers({
+      "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
+      "x-rapidapi-host": process.env.X_RAPIDAPI_HOST,
+      useQueryString: true,
+    });
+
+    request.end(async function (response) {
+      if (response.error) throw new Error(response.error);
+
+      const matches = response.body;
+      await insertMatchesIntoDb(matches);
+      console.log({ success: true, size: matches.length });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports.getMatchesFromApi = async (req, res, next) => {
   try {
     var request = unirest("GET", process.env.API_URL);
@@ -12,11 +34,11 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
       useQueryString: true,
     });
 
-    request.end(function (response) {
+    request.end(async function (response) {
       if (response.error) throw new Error(response.error);
 
       const matches = response.body;
-      insertMatchesIntoDb(matches);
+      await insertMatchesIntoDb(matches);
       res.json({ success: true, size: matches.length, matches });
     });
   } catch (error) {
@@ -26,7 +48,7 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
 
 module.exports.getMatchesFromDatabase = async (req, res, next) => {
   try {
-    let matches = await Match.find();
+    let matches = await Match.find().sort({ date: -1 });
     if (matches) {
       return res.json({ success: true, size: matches.length, matches });
     } else {

@@ -4,6 +4,17 @@ dotenv.config({ path: "./config/config.env" });
 require("./config/db");
 require("colors");
 
+const { fetchMatchesFromApi } = require("./controllers/index");
+const CronJob = require("cron").CronJob;
+const job = new CronJob(
+  "0 */30 * * * *",
+  fetchMatchesFromApi,
+  null,
+  true,
+  "America/Los_Angeles"
+);
+job.start();
+
 const express = require("express");
 const ErrorHandler = require("./middlewares/error");
 
