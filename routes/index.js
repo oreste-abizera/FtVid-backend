@@ -1,5 +1,5 @@
 const express = require("express");
-const { getVideosFromApi } = require("../controllers");
+const { getMatchesFromApi, getMatchesFromDatabase } = require("../controllers");
 
 const Router = express.Router();
 Router.get("/", (req, res) => {
@@ -9,6 +9,7 @@ Router.get("/", (req, res) => {
   });
 });
 
-Router.get("/videos/api", getVideosFromApi);
+Router.get("/videos/api", getMatchesFromApi);
+Router.get("/videos", getMatchesFromDatabase);
 
 module.exports = Router;

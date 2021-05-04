@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const MatchSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [trur, "title of the match is required"],
+    required: [true, "title of the match is required"],
   },
   embed: {
     type: String,
