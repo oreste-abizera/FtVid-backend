@@ -12,11 +12,11 @@ module.exports.fetchMatchesFromApi = async () => {
       useQueryString: true,
     });
 
-    request.end(async function (response) {
+    request.end(function (response) {
       if (response.error) throw new Error(response.error);
 
       const matches = response.body;
-      await insertMatchesIntoDb(matches);
+      insertMatchesIntoDb(matches);
       console.log({ success: true, size: matches.length });
     });
   } catch (error) {
@@ -34,11 +34,11 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
       useQueryString: true,
     });
 
-    request.end(async function (response) {
+    request.end(function (response) {
       if (response.error) throw new Error(response.error);
 
       const matches = response.body;
-      await insertMatchesIntoDb(matches);
+      insertMatchesIntoDb(matches);
       res.json({ success: true, size: matches.length, matches });
     });
   } catch (error) {
