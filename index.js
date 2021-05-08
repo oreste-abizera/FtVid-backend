@@ -5,6 +5,7 @@ require("./config/db");
 require("colors");
 
 const { fetchMatchesFromApi } = require("./controllers/index");
+fetchMatchesFromApi();
 const CronJob = require("cron").CronJob;
 const job = new CronJob(
   "0 */30 * * * *",

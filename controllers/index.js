@@ -48,12 +48,16 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
 
 module.exports.getMatchesFromDatabase = async (req, res, next) => {
   try {
+    if (!req.query.page) {
+      return next(new ErrorResponse("please provide the page to fetch", 400));
+    }
     const options = {
-      page: 1,
+      page: req.query.page,
       limit: 3,
       collation: {
         locale: "en",
       },
+      sort: { date: -1 },
     };
     // let matches = await Match.find().sort({ date: -1 });
     let matches = await Match.paginate({}, options);
@@ -68,30 +72,34 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
 };
 
 async function insertMatchesIntoDb(newMatches) {
-  const currentMatches = await Match.find();
-  let finalMatches = [];
-  if (currentMatches) {
-    let combined = [...newMatches, ...currentMatches];
-    for (let i = 0; i < combined.length; i++) {
-      let found = false;
-      for (let j = 0; j < finalMatches.length; j++) {
-        if (
-          finalMatches[j].title === combined[i].title &&
-          new Date(finalMatches[j].date).toISOString() ===
-            new Date(combined[i].date).toISOString() &&
-          finalMatches[j].url === combined[i].url
-        ) {
-          found = true;
-          break;
+  try {
+    const currentMatches = await Match.find();
+    let finalMatches = [];
+    if (currentMatches) {
+      let combined = [...newMatches, ...currentMatches];
+      for (let i = 0; i < combined.length; i++) {
+        let found = false;
+        for (let j = 0; j < finalMatches.length; j++) {
+          if (
+            finalMatches[j].title === combined[i].title &&
+            new Date(finalMatches[j].date).toISOString() ===
+              new Date(combined[i].date).toISOString() &&
+            finalMatches[j].url === combined[i].url
+          ) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          finalMatches.push(combined[i]);
         }
       }
-      if (!found) {
-        finalMatches.push(combined[i]);
-      }
+    } else {
+      finalMatches = [...newMatches];
     }
-  } else {
-    finalMatches = [...newMatches];
-  }
 
-  await Match.create(finalMatches);
+    await Match.create(finalMatches);
+  } catch (error) {
+    console.log("Error occured" + error);
+  }
 }
