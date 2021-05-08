@@ -3,12 +3,13 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
 require("./config/db");
 require("colors");
+const cors = require("cors");
 
 const { fetchMatchesFromApi } = require("./controllers/index");
 fetchMatchesFromApi();
 const CronJob = require("cron").CronJob;
 const job = new CronJob(
-  "0 */30 * * * *",
+  "0 */10 * * * *",
   fetchMatchesFromApi,
   null,
   true,
@@ -23,6 +24,7 @@ const app = express();
 //import routes
 const Router = require("./routes/index");
 
+app.use(cors());
 app.use(Router);
 app.use(ErrorHandler);
 
