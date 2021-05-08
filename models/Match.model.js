@@ -1,4 +1,10 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
+
+// mongoosePaginate.paginate.options = {
+//   lean: true,
+//   limit: 20,
+// };
 
 const MatchSchema = new mongoose.Schema({
   title: {
@@ -57,5 +63,9 @@ const MatchSchema = new mongoose.Schema({
 });
 
 MatchSchema.index({ title: 1, date: 1, url: 1 }, { unique: 1 });
+
+MatchSchema.plugin(mongoosePaginate);
+
+MatchSchema.pa;
 
 module.exports.Match = new mongoose.model("Match", MatchSchema);

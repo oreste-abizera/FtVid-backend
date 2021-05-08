@@ -48,7 +48,15 @@ module.exports.getMatchesFromApi = async (req, res, next) => {
 
 module.exports.getMatchesFromDatabase = async (req, res, next) => {
   try {
-    let matches = await Match.find().sort({ date: -1 });
+    const options = {
+      page: 1,
+      limit: 3,
+      collation: {
+        locale: "en",
+      },
+    };
+    // let matches = await Match.find().sort({ date: -1 });
+    let matches = await Match.paginate({}, options);
     if (matches) {
       return res.json({ success: true, size: matches.length, matches });
     } else {
