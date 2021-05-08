@@ -56,7 +56,7 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
     }
     const options = {
       page: req.query.page,
-      limit: 3,
+      limit: 20,
       collation: {
         locale: "en",
       },
