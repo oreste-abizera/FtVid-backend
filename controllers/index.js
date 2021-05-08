@@ -13,7 +13,10 @@ module.exports.fetchMatchesFromApi = async () => {
     });
 
     request.end(function (response) {
-      if (response.error) throw new Error(response.error);
+      if (response.error) {
+        console.log(response.error);
+        return;
+      }
 
       const matches = response.body;
       insertMatchesIntoDb(matches);
