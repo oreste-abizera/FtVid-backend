@@ -74,27 +74,44 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
   }
 };
 
-module.exports.getSingleMatch = async(req,res,next)=>{
+module.exports.searchMatch = async (req, res, next) => {
   try {
-  if(!req.params.id){
-    return next("Please provide match id",400)
-  }
-
-  let match = await Match.findById(req.params.id)
-  if(match){
-    return res.json({
-      success: true,
-      match
-    })
-  }
-
-  return next(new ErrorResponse("match not found", 404))
-
-    
+    if (!req.query.search) {
+      return next(new ErrorResponse("please provide a search key"));
+    }
+    let results = await Match.find({
+      title: new RegExp(req.query.search, "i"),
+    });
+    if (results) {
+      return res.json({
+        success: true,
+        matches: results,
+      });
+    }
   } catch (error) {
-  return next(new ErrorResponse("error occured"))  
+    return next(new ErrorResponse("error occured while searching", 400));
   }
+};
+
+module.exports.getSingleMatch = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next("Please provide match id", 400);
+    }
+
+    let match = await Match.findById(req.params.id);
+    if (match) {
+      return res.json({
+        success: true,
+        match,
+      });
+    }
+
+    return next(new ErrorResponse("match not found", 404));
+  } catch (error) {
+    return next(new ErrorResponse("error occured"));
   }
+};
 
 async function insertMatchesIntoDb(newMatches) {
   try {
