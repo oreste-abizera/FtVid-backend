@@ -1,5 +1,5 @@
 const express = require("express");
-const { getMatchesFromApi, getMatchesFromDatabase } = require("../controllers");
+const { getMatchesFromApi, getMatchesFromDatabase,getSingleMatch } = require("../controllers");
 
 const Router = express.Router();
 Router.get("/", (req, res) => {
@@ -11,5 +11,6 @@ Router.get("/", (req, res) => {
 
 Router.get("/videos/api", getMatchesFromApi);
 Router.get("/videos", getMatchesFromDatabase);
+Router.get("/videos/:id", getSingleMatch);
 
 module.exports = Router;

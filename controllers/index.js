@@ -74,6 +74,28 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
   }
 };
 
+module.exports.getSingleMatch = async(req,res,next)=>{
+  try {
+  if(!req.params.id){
+    return next("Please provide match id",400)
+  }
+
+  let match = await Match.findById(req.params.id)
+  if(match){
+    return res.json({
+      success: true,
+      match
+    })
+  }
+
+  return next(new ErrorResponse("match not found", 404))
+
+    
+  } catch (error) {
+  return next(new ErrorResponse("error occured"))  
+  }
+  }
+
 async function insertMatchesIntoDb(newMatches) {
   try {
     const currentMatches = await Match.find();
