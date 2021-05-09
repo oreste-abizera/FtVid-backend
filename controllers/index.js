@@ -81,7 +81,7 @@ module.exports.searchMatch = async (req, res, next) => {
     }
     let results = await Match.find({
       title: new RegExp(req.query.search, "i"),
-    });
+    }).sort({ date: -1 });
     if (results) {
       return res.json({
         success: true,
