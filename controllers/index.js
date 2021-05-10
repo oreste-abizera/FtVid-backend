@@ -80,7 +80,10 @@ module.exports.searchMatch = async (req, res, next) => {
       return next(new ErrorResponse("please provide a search key"));
     }
     let results = await Match.find({
-      title: new RegExp(req.query.search, "i"),
+      $or: [
+        { title: new RegExp(req.query.search, "i") },
+        { "competition.name": new RegExp(req.query.search, "i") },
+      ],
     }).sort({ date: -1 });
     if (results) {
       return res.json({
