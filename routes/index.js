@@ -4,6 +4,7 @@ const {
   getMatchesFromDatabase,
   getSingleMatch,
   searchMatch,
+  getMatchesIndexes,
 } = require("../controllers");
 
 const Router = express.Router();
@@ -14,6 +15,7 @@ Router.get("/", (req, res) => {
   });
 });
 
+Router.get("/indexing", getMatchesIndexes);
 Router.get("/videos/api", getMatchesFromApi);
 Router.get("/videos", getMatchesFromDatabase);
 Router.get("/videos/search", searchMatch);

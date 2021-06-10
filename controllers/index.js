@@ -74,6 +74,23 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
   }
 };
 
+module.exports.getMatchesIndexes = async (req, res, next) => {
+  try {
+    let matches = await Match.find({}).sort({ date: -1 }).select("_id");
+    if (matches) {
+      return res.json({
+        success: true,
+        size: matches.length,
+        matches: matches.map((match) => match._id),
+      });
+    } else {
+      return next(new ErrorResponse("no matches found", 404));
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports.searchMatch = async (req, res, next) => {
   try {
     if (!req.query.search) {
