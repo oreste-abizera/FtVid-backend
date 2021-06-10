@@ -76,7 +76,7 @@ module.exports.getMatchesFromDatabase = async (req, res, next) => {
 
 module.exports.getMatchesIndexes = async (req, res, next) => {
   try {
-    let matches = await Match.find({}).sort({ date: -1 }).select("_id");
+    let matches = await Match.find({}, "_id").sort({ date: -1 });
     if (matches) {
       return res.json({
         success: true,
