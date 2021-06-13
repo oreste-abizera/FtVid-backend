@@ -21,6 +21,8 @@ const express = require("express");
 const ErrorHandler = require("./middlewares/error");
 
 const app = express();
+
+app.use(express.json());
 //import routes
 const Router = require("./routes/index");
 

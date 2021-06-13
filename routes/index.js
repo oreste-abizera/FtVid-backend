@@ -5,6 +5,7 @@ const {
   getSingleMatch,
   searchMatch,
   getMatchesIndexes,
+  addMatchManually,
 } = require("../controllers");
 
 const Router = express.Router();
@@ -20,5 +21,6 @@ Router.get("/videos/api", getMatchesFromApi);
 Router.get("/videos", getMatchesFromDatabase);
 Router.get("/videos/search", searchMatch);
 Router.get("/videos/:id", getSingleMatch);
+Router.post(`/add/${process.env.POST_URL}`, addMatchManually);
 
 module.exports = Router;

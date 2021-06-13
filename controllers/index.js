@@ -165,3 +165,20 @@ async function insertMatchesIntoDb(newMatches) {
     console.log("Error occured" + error);
   }
 }
+
+module.exports.addMatchManually = async (req, res, next) => {
+  try {
+    let newMatch = new Match(req.body);
+    let data = await newMatch.save();
+    if (data) {
+      return res.json({
+        success: true,
+        data,
+      });
+    } else {
+      return next(new ErrorResponse("Saving match failed"));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

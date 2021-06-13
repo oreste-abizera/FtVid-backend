@@ -7,6 +7,10 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 // };
 
 const MatchSchema = new mongoose.Schema({
+  manual: {
+    type: Boolean,
+    default: false,
+  },
   title: {
     type: String,
     required: [true, "title of the match is required"],
